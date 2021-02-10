@@ -1,0 +1,3 @@
+[submodule "TDRL/third_party/spdlog"]
+	path = TDRL/third_party/spdlog
+	url = https://github.com/gabime/spdlog

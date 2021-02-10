@@ -2,11 +2,18 @@
 
 #include <iostream>
 
+#include "Application.h"
+#include "Log.h"
+
 extern tdrl::Application *tdrl::CreateApplication();
 
 int main(int argc, char **argv) {
-  std::cout << "Hello World inside main()" << std::endl;
-  auto pong = tdrl::CreateApplication();
-  pong->Run();
-  delete pong;
+	tdrl::Log::Init();
+	TDRL_CORE_WARN("Initialized log");
+	int a = 5;
+	TDRL_CORE_INFO("Hello Var={0}", a);
+
+    auto pong = tdrl::CreateApplication();
+    pong->Run();
+    delete pong;
 }

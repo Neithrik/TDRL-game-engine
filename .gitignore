@@ -1,11 +1,12 @@
-# Bazel directories
-bazel-bin
-bazel-out
-bazel-TDRL-game-engine
-bazel-testlogs
 
-# Prerequisites
-*.d
+
+# Directories
+bin/
+bin-int/
+.vs/
+
+# VS user files
+*.vcxproj.user
 
 # Compiled Object files
 *.slo

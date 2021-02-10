@@ -2,11 +2,11 @@
 
 #include <iostream>
 
-extern tdlr::Application *tdlr::CreateApplication();
+extern tdrl::Application *tdrl::CreateApplication();
 
 int main(int argc, char **argv) {
   std::cout << "Hello World inside main()" << std::endl;
-  auto pong = tdlr::CreateApplication();
+  auto pong = tdrl::CreateApplication();
   pong->Run();
   delete pong;
 }

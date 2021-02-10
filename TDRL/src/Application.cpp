@@ -1,8 +1,8 @@
-#include "src/application.h"
+#include "application.h"
 
 #include <iostream>
 
-namespace tdlr {
+namespace tdrl {
 
 Application::Application() {}
 
@@ -12,4 +12,4 @@ void Application::Run() {
   std::cout << "Hello World inside Application::Run()" << std::endl;
 }
 
-} // namespace tdlr
+} // namespace tdrl

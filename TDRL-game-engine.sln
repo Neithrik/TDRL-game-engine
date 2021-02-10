@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1340
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TDRL", "TDRL\TDRL.vcxproj", "{3F0FBA48-F9A4-4380-94DD-6926D8E33D0A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pong", "Pong\Pong.vcxproj", "{39237192-C8A0-483A-A97C-8653F67CBADA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3F0FBA48-F9A4-4380-94DD-6926D8E33D0A}.Debug|x64.ActiveCfg = Debug|x64
+		{3F0FBA48-F9A4-4380-94DD-6926D8E33D0A}.Debug|x64.Build.0 = Debug|x64
+		{3F0FBA48-F9A4-4380-94DD-6926D8E33D0A}.Release|x64.ActiveCfg = Release|x64
+		{3F0FBA48-F9A4-4380-94DD-6926D8E33D0A}.Release|x64.Build.0 = Release|x64
+		{39237192-C8A0-483A-A97C-8653F67CBADA}.Debug|x64.ActiveCfg = Debug|x64
+		{39237192-C8A0-483A-A97C-8653F67CBADA}.Debug|x64.Build.0 = Debug|x64
+		{39237192-C8A0-483A-A97C-8653F67CBADA}.Release|x64.ActiveCfg = Release|x64
+		{39237192-C8A0-483A-A97C-8653F67CBADA}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4545AE66-261C-435E-A573-0FFAA5B17D12}
+	EndGlobalSection
+EndGlobal

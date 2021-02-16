@@ -8,15 +8,21 @@ workspace "TDRL-game-engine"
 		"Dist",
 	}
 
-outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
+-- Include directories relative to root folder (solution directory).
+IncludeDir = {}
+IncludeDir["GLFW"] = "TDRL/third_party/GLFW/include"
+
+include "TDRL/third_party/GLFW"
 
 project "TDRL"
 	location "TDRL"
 	kind "SharedLib"
 	language "C++"
 
-	targetdir ("bin/" .. outputDir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputDir .. "/%{prj.name}")
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
@@ -27,6 +33,14 @@ project "TDRL"
 	includedirs
 	{
 		"%{prj.name}/third_party/spdlog/include",
+		"%{prj.name}/src",
+		"%{IncludeDir.GLFW}",
+	}
+
+	links
+	{
+		"GLFW",
+		"opengl32.lib",
 	}
 
 	filter "system:windows"
@@ -43,7 +57,7 @@ project "TDRL"
 
 		postbuildcommands
 		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputDir .. "/Pong")
+			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Pong")
 		}
 
 	filter "configurations:Debug"
@@ -63,8 +77,8 @@ project "Pong"
 	kind "ConsoleApp"
 	language "C++"
 
-	targetdir ("bin/" .. outputDir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputDir .. "/%{prj.name}")
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{

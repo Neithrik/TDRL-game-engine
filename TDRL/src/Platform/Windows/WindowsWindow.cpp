@@ -36,6 +36,7 @@ namespace tdrl {
 			(int)props.Width, (int)props.Height, props.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
 		glfwSetWindowUserPointer(m_Window, &m_Data);
+		glewInit();
 	}
 
 	void WindowsWindow::Shutdown()

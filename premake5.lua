@@ -12,7 +12,8 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (solution directory).
 IncludeDir = {}
-IncludeDir["GLFW"] = "TDRL/third_party/GLFW/include"
+IncludeDir["GLFW"] = "TDRL/third_party/glfw/include"
+IncludeDir["GLEW"] = "TDRL/third_party/glew/include"
 
 include "TDRL/third_party/GLFW"
 
@@ -35,11 +36,23 @@ project "TDRL"
 		"%{prj.name}/third_party/spdlog/include",
 		"%{prj.name}/src",
 		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.GLEW}",
+	}
+
+	libdirs
+	{
+		"%{prj.name}/third_party/glew/lib/Release/x64",
+	}
+
+	bindirs
+	{
+		"%{prj.name}/third_party/glew/bin/Release/x64",
 	}
 
 	links
 	{
 		"GLFW",
+		"glew32.lib",
 		"opengl32.lib",
 	}
 
@@ -50,6 +63,7 @@ project "TDRL"
 
 		defines
 		{
+			"GLEW_STATIC",
 			"TDRL_PLATFORM_WINDOWS",
 			"TDRL_BUILD_DLL",
 			"_WINDLL",
@@ -91,6 +105,7 @@ project "Pong"
 		"TDRL/third_party/spdlog/include",
 		"tdrl/src", 
 	}
+
 
 	links
 	{

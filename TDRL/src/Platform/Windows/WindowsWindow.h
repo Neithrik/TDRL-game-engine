@@ -15,8 +15,8 @@ namespace tdrl {
 
 		void OnUpdate() override;
 
-		inline unsigned int GetWidth() const override { return m_Data.Width; }
-		inline unsigned int GetHeight() const override { return m_Data.Height; }
+		inline unsigned int GetSize() const override { return m_Data.Size; }
+		inline unsigned int GetGran() const override { return m_Data.Gran; }
 
 	private:
 		virtual void Init(const WindowProps& props);
@@ -24,7 +24,7 @@ namespace tdrl {
 
 		struct WindowData {
 			std::string Title;
-			unsigned int Width, Height;
+			unsigned int Size, Gran;
 			bool VSync;
 
 			EventCallbackFn EventCallback;

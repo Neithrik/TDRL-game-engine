@@ -2,9 +2,6 @@
 
 #include <iostream>
 
-#include "GL/glew.h"
-#include "GLFW/glfw3.h"
-
 namespace tdrl {
 
 	Application::Application()
@@ -16,8 +13,6 @@ namespace tdrl {
 
 	void Application::Run() {
 		while (m_Running) {
-			glClearColor(1, 0, 1, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
 			m_Window->OnUpdate();
 		}
 	}

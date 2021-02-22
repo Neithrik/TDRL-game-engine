@@ -1,5 +1,8 @@
 #include "WindowsWindow.h"
 
+#include "GL/glew.h"
+#include "GLFW/glfw3.h"
+
 namespace tdrl {
 
 	static bool s_GLFWInitialized = false;
@@ -20,10 +23,10 @@ namespace tdrl {
 	void WindowsWindow::Init(const WindowProps& props)
 	{
 		m_Data.Title = props.Title;
-		m_Data.Width = props.Width;
-		m_Data.Height = props.Height;
+		m_Data.Size = props.Size;
+		m_Data.Gran = props.Gran;
 
-		TDRL_CORE_INFO("Initializing window {0} ({1} {2})", props.Title, props.Width, props.Height);
+		TDRL_CORE_INFO("Initializing window {0} ({1} {2})", props.Title, props.Size, props.Gran);
 
 		if (!s_GLFWInitialized) {
 			int success = glfwInit();
@@ -33,7 +36,7 @@ namespace tdrl {
 		}
 
 		m_Window = glfwCreateWindow(
-			(int)props.Width, (int)props.Height, props.Title.c_str(), nullptr, nullptr);
+			(int)props.Size, (int)props.Size, props.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		glewInit();
@@ -46,8 +49,26 @@ namespace tdrl {
 
 	void WindowsWindow::OnUpdate()
 	{
-		glfwPollEvents();
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		for (int x = 0; x < m_Data.Gran; x++) {
+			for (int y = 0; y < m_Data.Gran; y++) {
+
+				float vertex_x = x * 0.02 - 1.0;
+				float vertex_y = y * 0.02 - 1.0;
+
+				glColor4f(x * 0.01, y * 0.01, 1, 1);
+				glBegin(GL_QUADS);
+				glVertex2d(vertex_x, vertex_y);
+				glVertex2d(vertex_x + 0.02, vertex_y);
+				glVertex2d(vertex_x + 0.02, vertex_y + 0.02);
+				glVertex2d(vertex_x, vertex_y + 0.02);
+				glEnd();
+			}
+		}
+
 		glfwSwapBuffers(m_Window);
+		glfwPollEvents();
 	}
 
 } // namespace tdrl

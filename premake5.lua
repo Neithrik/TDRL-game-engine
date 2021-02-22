@@ -63,7 +63,6 @@ project "TDRL"
 
 		defines
 		{
-			"GLEW_STATIC",
 			"TDRL_PLATFORM_WINDOWS",
 			"TDRL_BUILD_DLL",
 			"_WINDLL",

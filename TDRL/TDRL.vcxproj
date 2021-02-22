@@ -82,7 +82,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GLEW_STATIC;TDRL_PLATFORM_WINDOWS;TDRL_BUILD_DLL;_WINDLL;TDRL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TDRL_PLATFORM_WINDOWS;TDRL_BUILD_DLL;_WINDLL;TDRL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>third_party\spdlog\include;src;third_party\glfw\include;third_party\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -104,7 +104,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GLEW_STATIC;TDRL_PLATFORM_WINDOWS;TDRL_BUILD_DLL;_WINDLL;TDRL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TDRL_PLATFORM_WINDOWS;TDRL_BUILD_DLL;_WINDLL;TDRL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>third_party\spdlog\include;src;third_party\glfw\include;third_party\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -130,7 +130,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GLEW_STATIC;TDRL_PLATFORM_WINDOWS;TDRL_BUILD_DLL;_WINDLL;TDRL_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TDRL_PLATFORM_WINDOWS;TDRL_BUILD_DLL;_WINDLL;TDRL_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>third_party\spdlog\include;src;third_party\glfw\include;third_party\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>

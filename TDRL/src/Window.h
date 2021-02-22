@@ -9,13 +9,13 @@ namespace tdrl {
 	struct WindowProps
 	{
 		std::string Title;
-		unsigned int Width;
-		unsigned int Height;
+		unsigned int Size;
+		unsigned int Gran;
 
 		WindowProps(const std::string& title = "TDRL",
-					unsigned int width = 1280,
-					unsigned int height = 720)
-			: Title(title), Height(height), Width(width)
+					unsigned int size = 720,
+					unsigned int gran = 100)
+			: Title(title), Size(size), Gran(gran)
 		{
 		}
 	};
@@ -29,8 +29,8 @@ namespace tdrl {
 
 		virtual void OnUpdate() = 0;
 
-		virtual unsigned int GetWidth() const = 0;
-		virtual unsigned int GetHeight() const = 0;
+		virtual unsigned int GetSize() const = 0;
+		virtual unsigned int GetGran() const = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());
 	};

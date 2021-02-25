@@ -13,12 +13,17 @@ namespace tdrl {
 		};
 
 		const char* GetName() const override {
+			TDRL_CORE_INFO("Key: {0}", GetKey());
 			return "KeyPressedEvent";
 		};
 
 		int GetCategoryFlags() const override {
 			return int(EventCategory::EventCategoryKeyboard);
 		};
+
+		int GetKey() const {
+			return key_;
+		}
 
 	private:
 		int key_;

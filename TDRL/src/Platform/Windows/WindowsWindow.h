@@ -13,7 +13,11 @@ namespace tdrl {
 		WindowsWindow(const WindowProps& props);
 		virtual ~WindowsWindow();
 
-		void OnUpdate() override;
+		void OnUpdate(ColorMap color_map) override;
+
+		void Exit() {
+			Shutdown();
+		}
 
 		inline unsigned int GetSize() const override { return m_Data.Size; }
 		inline unsigned int GetGran() const override { return m_Data.Gran; }
@@ -24,7 +28,10 @@ namespace tdrl {
 
 	private:
 		virtual void Init(const WindowProps& props);
-		virtual void Shutdown();
+		void Shutdown()
+		{
+			glfwDestroyWindow(m_Window);
+		}
 
 		struct WindowData {
 			std::string Title;

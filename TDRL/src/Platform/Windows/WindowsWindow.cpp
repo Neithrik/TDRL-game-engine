@@ -22,6 +22,7 @@ namespace tdrl {
 		Shutdown();
 	}
 
+
 	void WindowsWindow::Init(const WindowProps& props)
 	{
 		m_Data.Title = props.Title;
@@ -79,27 +80,39 @@ namespace tdrl {
 
 	}
 
-	void WindowsWindow::Shutdown()
-	{
-		glfwDestroyWindow(m_Window);
-	}
-
-	void WindowsWindow::OnUpdate()
+	void WindowsWindow::OnUpdate(ColorMap color_map)
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		for (int x = 0; x < m_Data.Gran; x++) {
 			for (int y = 0; y < m_Data.Gran; y++) {
 
-				float vertex_x = x * 0.02 - 1.0;
-				float vertex_y = y * 0.02 - 1.0;
+				GameObject::Color color = color_map[Coordinate(x, y)];
 
-				glColor4f(x * 0.01, y * 0.01, 1, 1);
+				switch (color) {
+				case GameObject::Color::BLUE:
+					glColor4f(0, 0, 1, 1);
+					break;
+				case GameObject::Color::RED:
+					glColor4f(1, 0, 0, 1);
+					break;
+				case GameObject::Color::GREEN:
+					glColor4f(0, 1, 0, 1);
+					break;
+				case GameObject::Color::DEFAULT:
+				default:
+					glColor4f(0, 0, 0, 1);
+					break;
+				}
+
 				glBegin(GL_QUADS);
+				float pixel_width = 2.0 / m_Data.Gran;
+				float vertex_x = x * pixel_width - 1.0;
+				float vertex_y = y * pixel_width - 1.0;
 				glVertex2d(vertex_x, vertex_y);
-				glVertex2d(vertex_x + 0.02, vertex_y);
-				glVertex2d(vertex_x + 0.02, vertex_y + 0.02);
-				glVertex2d(vertex_x, vertex_y + 0.02);
+				glVertex2d(vertex_x + pixel_width, vertex_y);
+				glVertex2d(vertex_x + pixel_width, vertex_y + pixel_width);
+				glVertex2d(vertex_x, vertex_y + pixel_width);
 				glEnd();
 			}
 		}

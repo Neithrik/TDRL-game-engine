@@ -2,6 +2,7 @@
 
 #include <functional>
 
+#include "Events/Event.h"
 #include "Core.h"
 
 namespace tdrl {
@@ -23,7 +24,7 @@ namespace tdrl {
 	class TDRL_API Window
 	{
 	public:
-		using EventCallbackFn = std::function<void()>;
+		using EventCallbackFn = std::function<void(Event&)>;
 
 		virtual ~Window() {}
 
@@ -31,6 +32,8 @@ namespace tdrl {
 
 		virtual unsigned int GetSize() const = 0;
 		virtual unsigned int GetGran() const = 0;
+
+		virtual void SetEventCallback(EventCallbackFn event_callback) = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());
 	};

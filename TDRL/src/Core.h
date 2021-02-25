@@ -17,3 +17,5 @@
 	#define TDRL_ASSERT(x, ...)
 	#define TDRL_CORE_ASSERT(x, ...)
 #endif
+
+#define BIT(x) (1 << x)

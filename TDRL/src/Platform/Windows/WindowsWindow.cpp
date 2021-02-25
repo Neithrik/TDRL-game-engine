@@ -1,5 +1,7 @@
 #include "WindowsWindow.h"
 
+#include "Events/ApplicationEvent.h"
+#include "Events/KeyEvent.h"
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
@@ -40,6 +42,41 @@ namespace tdrl {
 		glfwMakeContextCurrent(m_Window);
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		glewInit();
+
+		// Set GLFW callbacks.
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			WindowResizeEvent event(width, height);
+
+			data.EventCallback(event);
+			data.Size = width;
+		});
+
+		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			WindowCloseEvent event;
+			data.EventCallback(event);
+		});
+
+		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+			switch (action) {
+			case GLFW_PRESS:
+			{
+				KeyPressedEvent event(key, 0);
+				data.EventCallback(event);
+				break;
+			}
+			case GLFW_RELEASE:
+				break;
+			case GLFW_REPEAT:
+				break;
+			}
+		});
+
 	}
 
 	void WindowsWindow::Shutdown()

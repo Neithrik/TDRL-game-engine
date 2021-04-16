@@ -1,10 +1,12 @@
-# Directories
-bin/
-bin-int/
-.vs/
+# Bazel generated files
+bazel-bin/
+bazel-out/
+bazel-tdrl-game-engine/
+bazel-testlogs/
 
 # VS user files
 *.vcxproj.user
+.vs/
 
 # Compiled Object files
 *.slo

@@ -7,6 +7,7 @@
 
 class Snake : public tdrl::Application {
 public:
+
   enum class Direction { UP, DOWN, LEFT, RIGHT, };
 
   Snake() : direction_(Direction::UP) {
@@ -15,6 +16,7 @@ public:
 			  }));
 	  apple_ = new tdrl::Point(tdrl::GameObject::Color::RED, tdrl::Coordinate(15, 15));
 	  gameObjects_ = { snake_, apple_ };
+	  agent_ = new tdrl::Agent(8, 3);
   }
 
   ~Snake() {}
@@ -23,7 +25,9 @@ private:
   std::vector<tdrl::GameObject*>* GetGameObjects() override {
 	  ChangeDirection();
 	  MoveSnake();
-	  CheckExit();
+	  if (CheckExit()) {
+		  return nullptr;
+	  }
 	  return &gameObjects_;
   }
 
@@ -118,24 +122,26 @@ private:
 	  }
   }
 
-  void CheckExit() {
+  bool CheckExit() {
 	  tdrl::CoordinateList snake_points = snake_->GetCoordinates();
 	  tdrl::Coordinate head = *(snake_points.end() - 1);
 
 	  if (head.first < 0 || head.second < 0) {
-		  Exit();
+		  return true;
 	  }
 
 	  if (head.first >= 50 || head.second >= 50) {
-		  Exit();
+		  return true;
 	  }
+
+	  return false;
   }
 
   tdrl::MultiPoints* snake_;
   tdrl::Point* apple_;
   std::vector<tdrl::GameObject*> gameObjects_;
   Direction direction_;
-
+  tdrl::Agent* agent_;
 };
 
 tdrl::Application *tdrl::CreateApplication() { return new Snake(); }

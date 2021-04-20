@@ -13,7 +13,8 @@ int main(int argc, char **argv) {
 	int a = 5;
 	TDRL_CORE_INFO("Hello Var={0}", a);
 
-    auto pong = tdrl::CreateApplication();
-    pong->Run();
-    delete pong;
+    auto game = tdrl::CreateApplication();
+    game->Run();
+
+    delete game;
 }

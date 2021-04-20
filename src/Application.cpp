@@ -56,6 +56,11 @@ namespace tdrl {
 			auto begin = std::chrono::high_resolution_clock::now();
 
 			std::vector<GameObject*>* gameObjects = GetGameObjects();
+
+			if (gameObjects == nullptr) {
+				m_Window->Exit();
+			}
+
 			last_key_ = Key::DEFAULT;
 			ColorMap colorMap = BuildColorMap(gameObjects);
 			m_Window->OnUpdate(colorMap);
@@ -65,6 +70,12 @@ namespace tdrl {
 			auto frame_length = std::chrono::duration<float>(1.0f / FPS);
 			auto remaining = std::chrono::duration_cast<std::chrono::nanoseconds>(frame_length - elapsed);
 			std::this_thread::sleep_for(remaining);
+		}
+	}
+
+	void Application::Train() {
+		for (int i = 0; i < 1000; i++) {
+
 		}
 	}
 

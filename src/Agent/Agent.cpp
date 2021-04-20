@@ -1,3 +1,20 @@
+#include "Agent.h"
+
+#include <Python.h>
+
+namespace tdrl {
+
+	Agent::Agent(int n_states, int n_actions) {
+		PyObject* pInt;
+
+		Py_Initialize();
+
+		PyRun_SimpleString(R"(
+
+import sys
+if not hasattr(sys, 'argv'):
+    sys.argv  = ['']
+
 import tensorflow.compat.v1 as tf
 import keras
 import keras.layers as L
@@ -60,7 +77,19 @@ print('Run this operation for a train step            : ', train_step)
 print('Feed this tensor to set the checkpoint filename: ', saver_def.filename_tensor_name)
 print('Run this operation to save a checkpoint        : ', saver_def.save_tensor_name)
 print('Run this operation to restore a checkpoint     : ', saver_def.restore_op_name)
+)");
 
-# Write the graph out to a file.
-with open("c:\\Users\\erikg\\TDRL-game-engine\\tmp\\graph.pb", 'wb') as f:
-  f.write(tf.get_default_graph().as_graph_def().SerializeToString())
+		// Py_Finalize();
+	}
+
+
+	int GetAction(int state[]) {
+		return 0;
+	}
+
+	void Train(int state[], int action, int reward,
+		int next_state, bool is_done) {
+
+	}
+
+} // namespace TDRL

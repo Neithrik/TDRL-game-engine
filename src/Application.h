@@ -22,6 +22,8 @@ public:
 
 	void Run();
 
+	void Train();
+
 	void OnEvent(Event& e);
 
 	void Exit() {

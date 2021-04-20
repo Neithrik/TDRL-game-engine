@@ -19,21 +19,6 @@ new_git_repository(
     build_file = "glew.BUILD",
 )
 
-new_git_repository(
-    name = "org_tensorflow",
-    remote = "https://github.com/tensorflow/tensorflow",
-	build_file_content = " ",
-	branch = "master",
-)
-load("@org_tensorflow//tensorflow:workspace3.bzl", "tf_workspace3")
-tf_workspace3()
-load("@org_tensorflow//tensorflow:workspace2.bzl", "tf_workspace2")
-tf_workspace2()
-load("@org_tensorflow//tensorflow:workspace1.bzl", "tf_workspace1")
-tf_workspace1()
-load("@org_tensorflow//tensorflow:workspace0.bzl", "tf_workspace0")
-tf_workspace0()
-
 new_local_repository(
     name = "glfw",
     path = "third_party/glfw",

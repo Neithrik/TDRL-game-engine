@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include <Python.h>
 
 namespace tdrl {
@@ -11,10 +12,10 @@ namespace tdrl {
 
 		void Init();
 
-		int GetAction(int state[], double epsilon);
+		int GetAction(std::vector<int> state, double epsilon);
 
-		void Train(int state[], int action, int reward,
-			int next_state, bool is_done);
+		void Train(std::vector<int> state, int action, int reward,
+				   std::vector<int> new_state, bool is_done);
 
 	private:
 		int n_states_;

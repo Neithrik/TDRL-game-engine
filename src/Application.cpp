@@ -11,7 +11,7 @@
 
 namespace tdrl {
 
-	constexpr int FPS = 4;
+	constexpr int FPS = 24;
 
 #define BIND_EVENT_FUNCTION(x) std::bind(&Application::x, this, std::placeholders::_1)
 
@@ -51,33 +51,53 @@ namespace tdrl {
 		return color_map;
 	}
 
-	void Application::Run() {
+	void Application::Run(bool train) {
+		int i = 0;
 		while (m_Running) {
+			i++;
+			if (train && i > 10000) {
+				return;
+			}
 			auto begin = std::chrono::high_resolution_clock::now();
 
-			std::vector<GameObject*>* gameObjects = GetGameObjects();
+			std::vector<GameObject*>* gameObjects = GetGameObjects(train);
 
-			if (gameObjects == nullptr) {
-				m_Window->Exit();
+			if (train) {
+				TrainStep();
 			}
 
-			last_key_ = Key::DEFAULT;
-			ColorMap colorMap = BuildColorMap(gameObjects);
-			m_Window->OnUpdate(colorMap);
+			if (gameObjects == nullptr) {
+				return;
+			}
 
-			auto end = std::chrono::high_resolution_clock::now();
-			auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
-			auto frame_length = std::chrono::duration<float>(1.0f / FPS);
-			auto remaining = std::chrono::duration_cast<std::chrono::nanoseconds>(frame_length - elapsed);
-			std::this_thread::sleep_for(remaining);
+			if (!train) {
+				last_key_ = Key::DEFAULT;
+				ColorMap colorMap = BuildColorMap(gameObjects);
+				m_Window->OnUpdate(colorMap);
+
+				auto end = std::chrono::high_resolution_clock::now();
+				auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+				auto frame_length = std::chrono::duration<float>(1.0f / FPS);
+				auto remaining = std::chrono::duration_cast<std::chrono::nanoseconds>(frame_length - elapsed);
+				std::this_thread::sleep_for(remaining);
+			}
 			// std::this_thread::sleep_for(std::chrono::duration<float>(5.0));
 		}
 	}
 
 	void Application::Train() {
-		for (int i = 0; i < 1000; i++) {
 
+		for (int i = 0; i < 100000; i++) {
+			if (i == 10 || i % 50 == 0) {
+				std::cout << "Training step: " << i << std::endl;
+				Run(false);
+			}
+			else {
+				Run(true);
+			}
+			Reset();
 		}
+		m_Window->Exit();
 	}
 
 } // namespace tdrl

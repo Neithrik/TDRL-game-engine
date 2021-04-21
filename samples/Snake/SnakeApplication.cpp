@@ -6,41 +6,74 @@
 #include "src/Tdrl.h"
 
 constexpr int FIELD_SIZE = 20;
+constexpr int STATE_N = 14;
+constexpr int ACTION_N = 3;
 
 class Snake : public tdrl::Application {
 public:
 
   enum class Direction { UP, DOWN, LEFT, RIGHT, };
 
-  Snake() : direction_(Direction::UP) {
-	  snake_ = new tdrl::MultiPoints(tdrl::GameObject::Color::BLUE,
-		  tdrl::CoordinateList({
-			  tdrl::Coordinate(10, 9),
-			  tdrl::Coordinate(10, 10), 
-			  tdrl::Coordinate(10, 11), 
-			  tdrl::Coordinate(10, 12),
-			  }));
-	  apple_ = new tdrl::Point(tdrl::GameObject::Color::RED, tdrl::Coordinate(15, 15));
-	  gameObjects_ = { snake_, apple_ };
-	  agent_ = new tdrl::Agent(14, 3);
+  Snake() {
+	  Reset();
+	  agent_ = new tdrl::Agent(STATE_N, ACTION_N);
 	  agent_->Init();
   }
 
   ~Snake() {}
 
 private:
-  std::vector<tdrl::GameObject*>* GetGameObjects() override {
-	  ChangeDirection();
+	void Reset() override {
+		direction_ = Direction::UP;
+		snake_ = new tdrl::MultiPoints(tdrl::GameObject::Color::BLUE,
+			tdrl::CoordinateList({
+				tdrl::Coordinate(10, 9),
+				tdrl::Coordinate(10, 10),
+				tdrl::Coordinate(10, 11),
+				tdrl::Coordinate(10, 12),
+				}));
+		apple_ = new tdrl::Point(tdrl::GameObject::Color::RED, tdrl::Coordinate(15, 15));
+		gameObjects_ = { snake_, apple_ };
+		game_over_ = false;
+		first_move_ = true;
+		reward_ = 0;
+		steps_without_reward_ = 0;
+		new_state_ = GetState();
+		last_action_ = 0;
+	}
+
+	void TrainStep() {
+		agent_->Train(prev_state_, last_action_, reward_, new_state_, game_over_);
+	}
+
+  std::vector<tdrl::GameObject*>* GetGameObjects(bool train) override {
+	  reward_ = 0;
+	  steps_without_reward_++;
+	  prev_state_ = new_state_;
+	  if (first_move_) {
+		  first_move_ = false;
+		  return &gameObjects_;
+	  }
+
+	  ChangeDirection(train);
 	  if (!MoveSnake()) {
+		  reward_ = -1;
+		  game_over_ = true;
 		  return nullptr;
 	  }
 	  if (CheckExit()) {
+		  reward_ = -1;
+		  game_over_ = true;
 		  return nullptr;
 	  }
+	  if (steps_without_reward_ > 50) {
+		  reward_ = -0.5;
+	  }
+	  new_state_ = GetState();
 	  return &gameObjects_;
   }
 
-  int* GetState() {
+  std::vector<int> GetState() {
 	  auto snake_points = snake_->GetCoordinates();
 	  tdrl::Coordinate head = *(snake_points.end() - 1);
 	  auto apple_point = apple_->GetCoordinates()[0];
@@ -91,21 +124,17 @@ private:
 		  }
 	  }
 
-	  int state[14] = { 
+	  return std::vector<int>({ 
 		  first_up, first_mid, first_down, second_up, second_mid, second_down,
 		  dir_left, dir_right, dir_up, dir_down,
-		  danger_left, danger_right, danger_up, danger_down};
-
-	  for (int i = 0; i < 14; i++) {
-		  std::cout << state[i] << ", ";
-	  }
-	  std::cout << std::endl;
-
-	  return state;
+		  danger_left, danger_right, danger_up, danger_down});
   }
 
-  void ChangeDirection() {
-	  int action = agent_->GetAction(GetState(), 0.25);
+  void ChangeDirection(bool train) {
+	  double training_epsilon = 0.1;
+	  double testing_epsilon = steps_without_reward_ > 50 ? 0.1 : 0.0;
+	  int action = agent_->GetAction(GetState(), train ? training_epsilon : testing_epsilon);
+	  last_action_ = action;
 
 	  switch (action) {
 	  case 0:
@@ -173,6 +202,8 @@ private:
 	  snake_points.push_back(new_head);
 
 	  if (head == apple_->GetCoordinates()[0]) {
+		  reward_ = 1.0 + 20.0 / (steps_without_reward_ + 1.0);
+		  steps_without_reward_ = 0;
 		  GenerateNewApple(snake_points);
 	  }
 	  else {
@@ -219,11 +250,18 @@ private:
 	  return false;
   }
 
-  tdrl::MultiPoints* snake_;
-  tdrl::Point* apple_;
-  std::vector<tdrl::GameObject*> gameObjects_;
-  Direction direction_;
-  tdrl::Agent* agent_;
+	tdrl::MultiPoints* snake_;
+	tdrl::Point* apple_;
+	std::vector<tdrl::GameObject*> gameObjects_;
+	Direction direction_;
+	tdrl::Agent* agent_;
+	std::vector<int> prev_state_;
+	std::vector<int> new_state_;
+	int reward_;
+	int steps_without_reward_;
+	int last_action_;
+	bool game_over_;
+	bool first_move_;
 };
 
 tdrl::Application *tdrl::CreateApplication() { return new Snake(); }

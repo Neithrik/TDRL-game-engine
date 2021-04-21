@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
 	TDRL_CORE_INFO("Hello Var={0}", a);
 
     auto game = tdrl::CreateApplication();
-    game->Run();
+    game->Train();
 
     delete game;
 }

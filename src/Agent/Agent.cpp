@@ -27,8 +27,8 @@ class Agent:
 	def init(self, state_dim, n_actions):
 		tf.disable_v2_behavior()
 		tf.reset_default_graph()
-		sess = tf.InteractiveSession()
-		tf.compat.v1.keras.backend.set_session(sess)
+		self.sess = tf.InteractiveSession()
+		tf.compat.v1.keras.backend.set_session(self.sess)
 
 		self.state_dim = state_dim
 		self.n_actions = n_actions
@@ -39,38 +39,38 @@ class Agent:
 		self.network.add(L.Dense(200, activation="relu"))
 		self.network.add(L.Dense(self.n_actions))
 
-		states_ph = keras.backend.placeholder(dtype='float32', shape=[None, self.state_dim])
-		actions_ph = keras.backend.placeholder(dtype='int32', shape=[None])
-		rewards_ph = keras.backend.placeholder(dtype='float32', shape=[None])
-		next_states_ph = keras.backend.placeholder(dtype='float32', shape=[None, self.state_dim])
-		is_done_ph = keras.backend.placeholder(dtype='bool', shape=[None])
+		self.state_ph = keras.backend.placeholder(dtype='float32', shape=[None, self.state_dim])
+		self.actions_ph = keras.backend.placeholder(dtype='int32', shape=[None])
+		self.rewards_ph = keras.backend.placeholder(dtype='float32', shape=[None])
+		self.next_state_ph = keras.backend.placeholder(dtype='float32', shape=[None, self.state_dim])
+		self.is_done_ph = keras.backend.placeholder(dtype='bool', shape=[None])
 
 		#get q-values for all actions in current states
-		predicted_qvalues = self.network(states_ph)
+		predicted_qvalues = self.network(self.state_ph)
 
 		#select q-values for chosen actions
-		predicted_qvalues_for_actions = tf.reduce_sum(predicted_qvalues * tf.one_hot(actions_ph, self.n_actions), axis=1)
+		predicted_qvalues_for_actions = tf.reduce_sum(predicted_qvalues * tf.one_hot(self.actions_ph, self.n_actions), axis=1)
 
 		gamma = 0.99
 
 		# compute q-values for all actions in next states
-		predicted_next_qvalues = self.network(next_states_ph)
+		predicted_next_qvalues = self.network(self.next_state_ph)
 
 		# compute V*(next_states) using predicted next q-values
 		next_state_values = tf.math.reduce_max(predicted_next_qvalues, axis = 1)
 
 		# compute "target q-values" for loss - it's what's inside square parentheses in the above formula.
-		target_qvalues_for_actions = rewards_ph + gamma * next_state_values
+		target_qvalues_for_actions = self.rewards_ph + gamma * next_state_values
 
 		# at the last state we shall use simplified formula: Q(s,a) = r(s,a) since s' doesn't exist
-		target_qvalues_for_actions = tf.where(is_done_ph, rewards_ph, target_qvalues_for_actions)
+		target_qvalues_for_actions = tf.where(self.is_done_ph, self.rewards_ph, target_qvalues_for_actions)
 
 		#mean squared error loss to minimize
 		loss = (predicted_qvalues_for_actions - tf.stop_gradient(target_qvalues_for_actions)) ** 2
 		loss = tf.reduce_mean(loss)
 
 		# training function that resembles agent.update(state, action, reward, next_state) from tabular agent
-		train_step = tf.train.AdamOptimizer(1e-4).minimize(loss)
+		self.train_step = tf.train.AdamOptimizer(1e-4).minimize(loss)
 
 		init = tf.global_variables_initializer()
 
@@ -80,7 +80,7 @@ class Agent:
 
 		print('Agent is initialized')
 
-		sess.run(tf.global_variables_initializer())
+		self.sess.run(tf.global_variables_initializer())
 
 	def get_action(self, state, epsilon):
 		q_values = self.network.predict(np.array([state]))[0]
@@ -90,11 +90,15 @@ class Agent:
 
 		return random_action if random.random() < epsilon else best_action
 
+	def train(self, state, action, reward, next_state, done):
+		self.sess.run(self.train_step, {
+					self.state_ph: [state], self.actions_ph: [action], self.rewards_ph: [reward], 
+					self.next_state_ph: [next_state], self.is_done_ph: [done]
+				})
+
+
 		)", "Agent");
 
-		std::cout << std::endl << "Agent representation: " << std::endl;
-		PyObject* agentRepresentation = PyObject_Repr(agent_);
-		std::cout << PyUnicode_AsUTF8(agentRepresentation) << std::endl;
 		// Py_Finalize();
 	}
 
@@ -110,16 +114,13 @@ class Agent:
 	}
 
 
-	int Agent::GetAction(int state[], double epsilon) {
-		std::cout << "Calling GetAction" << std::endl;
+	int Agent::GetAction(std::vector<int> state, double epsilon) {
 
 		PyObject* state_py = PyList_New(this->n_states_);
 		for (int i = 0; i < this->n_states_; i++) {
 			PyList_SET_ITEM(state_py, i, PyFloat_FromDouble(1.* state[i]));
 		}
 
-
-		PyObject* fmt = PyUnicode_FromString("{0!r}");
 		PyObject* args = PyTuple_New(2);
 		PyTuple_SetItem(args, 0, state_py);
 		PyTuple_SetItem(args, 1, PyFloat_FromDouble(epsilon));
@@ -132,14 +133,55 @@ class Agent:
 		}
 		int action_value = (int)PyLong_AsLong(action);
 
-		std::cout << "Action value: " << action_value << std::endl << std::endl;
-
 		return action_value;
 	}
 
-	void Agent::Train(int state[], int action, int reward,
-		int next_state, bool is_done) {
+	void Agent::Train(std::vector<int> state, int action, int reward,
+		std::vector<int> new_state, bool is_done) {
 
+		//std::cout << "Train step" << std::endl;
+
+		PyObject* args = PyTuple_New(5);
+
+		// State
+		PyObject* state_py = PyList_New(this->n_states_);
+		for (int i = 0; i < this->n_states_; i++) {
+			PyList_SET_ITEM(state_py, i, PyFloat_FromDouble(1.* state[i]));
+			// std::cout << state[i] << ", ";
+		}
+		// std::cout << std::endl;
+		PyTuple_SetItem(args, 0, state_py);
+
+		// Action
+		PyTuple_SetItem(args, 1, PyFloat_FromDouble(1.0 * action));
+		// std::cout << "Action: " << action << std::endl;
+
+		// Reward
+		PyTuple_SetItem(args, 2, PyFloat_FromDouble(1.0 * reward));
+		//std::cout << "Reward: " << reward << std::endl;
+
+		// New state
+		PyObject* new_state_py = PyList_New(this->n_states_);
+		for (int i = 0; i < this->n_states_; i++) {
+			PyList_SET_ITEM(new_state_py, i, PyFloat_FromDouble(1.* new_state[i]));
+			// std::cout << new_state[i] << ", ";
+		}
+		//std::cout << std::endl;
+		PyTuple_SetItem(args, 3, new_state_py);
+
+		// Done
+		//std::cout << "Is done: " << is_done << std::endl;
+		PyTuple_SetItem(args, 4, is_done ? Py_True : Py_False);
+		//std::cout << std::endl;
+
+		PyObject* train_outcome = PyObject_CallMethod(agent_, "train", "O", args);
+
+		if (train_outcome == nullptr) {
+			std::cout << "Failed calling Train method:" << std::endl;
+			PyErr_Print();
+		}
+
+		PyErr_Print();
 	}
 
 } // namespace TDRL

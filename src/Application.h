@@ -20,7 +20,7 @@ public:
 	Application();
 	virtual ~Application();
 
-	void Run();
+	void Run(bool train);
 
 	void Train();
 
@@ -32,7 +32,9 @@ public:
 
 	Key last_key_;
 private:
-	virtual std::vector<GameObject*>* GetGameObjects() = 0;
+	virtual std::vector<GameObject*>* GetGameObjects(bool train) = 0;
+	virtual void Reset() = 0;
+	virtual void TrainStep() = 0;
 
 	std::unique_ptr<Window> m_Window;
 	bool m_Running = true;

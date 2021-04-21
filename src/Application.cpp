@@ -11,7 +11,7 @@
 
 namespace tdrl {
 
-	constexpr int FPS = 24;
+	constexpr int FPS = 30;
 
 #define BIND_EVENT_FUNCTION(x) std::bind(&Application::x, this, std::placeholders::_1)
 
@@ -88,7 +88,7 @@ namespace tdrl {
 	void Application::Train() {
 
 		for (int i = 0; i < 100000; i++) {
-			if (i == 10 || i % 50 == 0) {
+			if (i < 10 || (i < 100 && i % 10 == 0) || i % 50 == 0) {
 				std::cout << "Training step: " << i << std::endl;
 				Run(false);
 			}

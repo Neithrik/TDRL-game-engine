@@ -202,7 +202,7 @@ private:
 	  snake_points.push_back(new_head);
 
 	  if (head == apple_->GetCoordinates()[0]) {
-		  reward_ = 1.0 + 20.0 / (steps_without_reward_ + 1.0);
+		  reward_ = 1.0 + 2.0 / (steps_without_reward_ + 1.0);
 		  steps_without_reward_ = 0;
 		  GenerateNewApple(snake_points);
 	  }

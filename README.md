@@ -4,4 +4,4 @@ A game engine with simple top-down 2D graphics and built-in reinforcement learni
 Demo of Snake game built with the engine:
 https://www.youtube.com/watch?v=nLAcWNm2Sro
 
-WARNING: This project is incredibly hacky! IF expanding it interests you, please reach out first.
+WARNING: This project is incredibly hacky! If expanding it interests you, please reach out first.

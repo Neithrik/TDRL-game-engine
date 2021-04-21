@@ -11,7 +11,7 @@ namespace tdrl {
 
 		void Init();
 
-		int GetAction(int state[]);
+		int GetAction(int state[], double epsilon);
 
 		void Train(int state[], int action, int reward,
 			int next_state, bool is_done);

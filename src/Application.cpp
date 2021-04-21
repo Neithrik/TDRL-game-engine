@@ -70,6 +70,7 @@ namespace tdrl {
 			auto frame_length = std::chrono::duration<float>(1.0f / FPS);
 			auto remaining = std::chrono::duration_cast<std::chrono::nanoseconds>(frame_length - elapsed);
 			std::this_thread::sleep_for(remaining);
+			// std::this_thread::sleep_for(std::chrono::duration<float>(5.0));
 		}
 	}
 

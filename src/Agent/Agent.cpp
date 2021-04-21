@@ -110,14 +110,31 @@ class Agent:
 	}
 
 
-	int Agent::GetAction(int state[]) {
-		PyObject* init_result =
-			PyObject_CallMethod(agent_, "get_action", "[i, i], 0.0", this->n_states_, this->n_actions_);
-		if (init_result == nullptr) {
+	int Agent::GetAction(int state[], double epsilon) {
+		std::cout << "Calling GetAction" << std::endl;
+
+		PyObject* state_py = PyList_New(this->n_states_);
+		for (int i = 0; i < this->n_states_; i++) {
+			PyList_SET_ITEM(state_py, i, PyFloat_FromDouble(1.* state[i]));
+		}
+
+
+		PyObject* fmt = PyUnicode_FromString("{0!r}");
+		PyObject* args = PyTuple_New(2);
+		PyTuple_SetItem(args, 0, state_py);
+		PyTuple_SetItem(args, 1, PyFloat_FromDouble(epsilon));
+
+		PyObject* action =
+			PyObject_CallMethod(agent_, "get_action", "O", args);
+		if (action == nullptr) {
 			std::cout << "Failed calling GetAction method:" << std::endl;
 			PyErr_Print();
 		}
-		return 0;
+		int action_value = (int)PyLong_AsLong(action);
+
+		std::cout << "Action value: " << action_value << std::endl << std::endl;
+
+		return action_value;
 	}
 
 	void Agent::Train(int state[], int action, int reward,

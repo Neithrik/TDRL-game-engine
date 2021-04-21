@@ -18,8 +18,8 @@ namespace tdrl {
 		unsigned int Gran;
 
 		WindowProps(const std::string& title = "TDRL",
-					unsigned int size = 1000,
-					unsigned int gran = 50)
+					unsigned int size = 300,
+					unsigned int gran = 20)
 			: Title(title), Size(size), Gran(gran)
 		{
 		}

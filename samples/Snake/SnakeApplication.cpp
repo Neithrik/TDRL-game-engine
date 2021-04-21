@@ -5,6 +5,8 @@
 
 #include "src/Tdrl.h"
 
+constexpr int FIELD_SIZE = 20;
+
 class Snake : public tdrl::Application {
 public:
 
@@ -32,12 +34,16 @@ private:
 	  return &gameObjects_;
   }
 
-  void ChangeDirection() {
+  int* GetState() {
 	  int state[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
-	  int action = agent_->GetAction(state);
+	  return state;
+  }
 
-	  switch (last_key_) {
-	  case Key::LEFT:
+  void ChangeDirection() {
+	  int action = agent_->GetAction(GetState());
+
+	  switch (action) {
+	  case 0:
 		  switch (direction_) {
 		  case Direction::UP:
 			  direction_ = Direction::LEFT;
@@ -53,7 +59,7 @@ private:
 			  break;
 		  };
 		  break;
-	  case Key::RIGHT:
+	  case 2:
 		  switch (direction_) {
 		  case Direction::UP:
 			  direction_ = Direction::RIGHT;
@@ -75,7 +81,6 @@ private:
   void MoveSnake() {
 	  tdrl::CoordinateList snake_points = snake_->GetCoordinates();
 	  tdrl::Coordinate head = *(snake_points.end() - 1);
-
 
 	  tdrl::Coordinate new_head;
 
@@ -108,8 +113,8 @@ private:
 
   void GenerateNewApple(tdrl::CoordinateList& snake_points) {
 	  while (true) {
-		  int newX = rand() % 50;
-		  int newY = rand() % 50;
+		  int newX = rand() % FIELD_SIZE;
+		  int newY = rand() % FIELD_SIZE;
 
 		  bool clash = false;
 		  for (tdrl::Coordinate snake_point : snake_points) {
@@ -134,7 +139,7 @@ private:
 		  return true;
 	  }
 
-	  if (head.first >= 50 || head.second >= 50) {
+	  if (head.first >= FIELD_SIZE || head.second >= FIELD_SIZE) {
 		  return true;
 	  }
 

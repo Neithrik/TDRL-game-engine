@@ -17,6 +17,7 @@ public:
 	  apple_ = new tdrl::Point(tdrl::GameObject::Color::RED, tdrl::Coordinate(15, 15));
 	  gameObjects_ = { snake_, apple_ };
 	  agent_ = new tdrl::Agent(8, 3);
+	  agent_->Init();
   }
 
   ~Snake() {}
@@ -32,6 +33,9 @@ private:
   }
 
   void ChangeDirection() {
+	  int state[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+	  int action = agent_->GetAction(state);
+
 	  switch (last_key_) {
 	  case Key::LEFT:
 		  switch (direction_) {

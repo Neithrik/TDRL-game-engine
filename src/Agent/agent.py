@@ -1,16 +1,3 @@
-#include "Agent.h"
-
-#include <iostream>
-
-#include "Sandbox.h"
-
-namespace tdrl {
-
-	Agent::Agent(int n_states, int n_actions) : n_states_(n_states), n_actions_(n_actions) {
-
-		Py_Initialize();
-
-		agent_ = LoadPythonClass(R"(
 
 class Agent:
 	def init(self):
@@ -79,32 +66,5 @@ class Agent:
 
 		sess.run(tf.global_variables_initializer())
 
-		return 1)", "Agent");
-
-		std::cout << std::endl << "Agent representation: " << std::endl;
-		PyObject* agentRepresentation = PyObject_Repr(agent_);
-		std::cout << PyUnicode_AsUTF8(agentRepresentation) << std::endl;
-		// Py_Finalize();
-	}
-
-	void Agent::Init() {
-		std::cout << "Begin initialization" << std::endl;
-		PyObject* init_result = PyObject_CallMethod(agent_, "init", "");
-		if (init_result == nullptr) {
-			std::cout << "Failed calling init method:" << std::endl;
-			PyObject* init_result_str = PyObject_Repr(init_result);
-			std::cout << PyUnicode_AsUTF8(init_result_str) << std::endl;
-		}
-	}
-
-
-	int Agent::GetAction(int state[]) {
-		return 0;
-	}
-
-	void Agent::Train(int state[], int action, int reward,
-		int next_state, bool is_done) {
-
-	}
-
-} // namespace TDRL
+agent = Agent();
+agent.init();
